@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { z } from 'zod';
+import { logNotification } from '../utils/logNotifications';
 
 const notificationsRouter = Router();
 
@@ -18,6 +19,9 @@ notificationsRouter.post('/', (req, res) => {
     if (!valid.success) {
         res.status(400).json({});
     } else {
+        const { recipientId, notificationTtype, content } = valid.data;
+        // Log the notification to a file   
+        logNotification(recipientId, notificationTtype, content);
         res.status(200).json({ message: 'Notification received' })
     }
 });

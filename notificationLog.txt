@@ -1,1 +1,2 @@
 Recipient: 123, Type: message, Content: You have a notification
+Recipient: 1234, Type: message, Content: This notification have been inserted by queue server

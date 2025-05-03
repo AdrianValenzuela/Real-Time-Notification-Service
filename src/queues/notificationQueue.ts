@@ -1,8 +1,4 @@
 import { Queue } from 'bullmq'
+import { connection } from '../utils/redisConnection'
 
-export const notificationQueue = new Queue('notifications', {
-    connection: {
-        host: process.env.REDIS_HOST || 'localhost',
-        port: Number(process.env.REDIS_PORT) || 6379,
-    }
-})
+export const notificationQueue = new Queue('notifications', { connection });

@@ -1,15 +1,21 @@
 import request from 'supertest';
 import app from '../../src/app';
+import { notificationQueue } from '../../src/queues/notificationQueue';
 
-jest.mock('bullmq', () => {
-    const originalModule = jest.requireActual('bullmq');
-    return {
-        ...originalModule,
-        Queue: jest.fn().mockImplementation(() => ({
-            add: jest.fn().mockResolvedValue(undefined),
-        })),
-    };
-});
+jest.mock('../../src/queues/notificationQueue', () => ({
+    notificationQueue: {
+        getJobs: jest.fn().mockResolvedValue([
+            {
+                data: {
+                    recipientId: 'user123',
+                    notificationType: 'message',
+                    content: 'You have a new message!',
+                },
+            },
+        ]),
+        add: jest.fn(),
+    },
+}));
 
 describe('POST /notifications', () => {
     it('should enqueue a valid notification', async () => {
@@ -17,12 +23,25 @@ describe('POST /notifications', () => {
             .post('/notifications')
             .send({
                 recipientId: 'user123',
-                notificationTtype: 'message',
+                notificationType: 'message',
                 content: 'You have a new message!',
             });
 
+        // check if the job was added to the queue
+        const queue = await notificationQueue.getJobs(['waiting', 'active', 'delayed']);
+        expect(queue).toHaveLength(1);
+        expect(queue.some(q => q.data.recipientId === 'user123')).toBe(true);
+
+        // check HTTP response
         expect(response.status).toBe(202);
         expect(response.body).toEqual({ message: 'Accepted' });
+
+        // check if the job was added to the queue with the correct data
+        expect(notificationQueue.add).toHaveBeenCalledWith('notification', {
+            recipientId: 'user123',
+            notificationType: 'message',
+            content: 'You have a new message!',
+        });
     });
 
     it('should return 400 for invalid body', async () => {
@@ -30,7 +49,7 @@ describe('POST /notifications', () => {
             .post('/notifications')
             .send({
                 recipientId: 123,
-                notificationTtype: 'message',
+                notificationType: 'message',
                 content: 'You have a new message!',
             });
 

@@ -8,7 +8,7 @@ const notificationsRouter = Router();
 // Define the schema for the notification payload
 const NotificationSchema = z.object({
     "recipientId": z.string(),
-    "notificationTtype": z.string(),
+    "notificationType": z.string(),
     "content": z.string(),
 });
 
@@ -25,11 +25,11 @@ notificationsRouter.post('/', async (req, res) => {
     if (!valid.success) {
         res.status(400).json({ error: 'Bad Request' });
     } else {
-        const { recipientId, notificationTtype, content } = valid.data;
+        const { recipientId, notificationType, content } = valid.data;
         // send the notification to the queue
         await notificationQueue.add('notification', {
             recipientId,
-            notificationTtype,
+            notificationType,
             content
         });
         res.status(202).json({ message: 'Accepted' })

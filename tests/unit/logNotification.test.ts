@@ -23,4 +23,12 @@ describe('logNotification', () => {
         const logContent = fs.readFileSync(logFilePath, 'utf-8');
         expect(logContent).toContain(`Recipient: ${recipientId}, Type: ${notificationType}, Content: ${content}`);
     });
+
+    it("should throw an error if parameters are empty", () => {
+        const recipientId = '';
+        const notificationType = '';
+        const content = '';
+
+        expect(() => logNotification(recipientId, notificationType, content)).toThrow('Invalid parameters: recipientId, notificationTtype, and content are required.');
+    });
 });

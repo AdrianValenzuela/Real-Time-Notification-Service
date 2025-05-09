@@ -20,7 +20,7 @@ describe('logNotification', () => {
 
         // Check if the log file exists and contains the correct log entry
         expect(fs.existsSync(logFilePath)).toBe(true);
-        const logContent = fs.readFileSync(logFilePath, 'utf-8');
+        const logContent: string = fs.readFileSync(logFilePath, 'utf-8');
         expect(logContent).toContain(`Recipient: ${recipientId}, Type: ${notificationType}, Content: ${content}`);
     });
 
@@ -29,6 +29,6 @@ describe('logNotification', () => {
         const notificationType = '';
         const content = '';
 
-        expect(() => logNotification(recipientId, notificationType, content)).toThrow('Invalid parameters: recipientId, notificationType, and content are required.');
+        expect(() => logNotification(recipientId, notificationType, content)).toThrow('Invalid parameters: recipientId, notificationType and content are required.');
     });
 });

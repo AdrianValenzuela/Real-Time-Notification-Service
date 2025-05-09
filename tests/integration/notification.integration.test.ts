@@ -2,6 +2,14 @@ import request from 'supertest';
 import app from '../../src/app';
 import { notificationQueue } from '../../src/queues/notificationQueue';
 
+type MockNotification = {
+    data: {
+        recipientId: string;
+        notificationType: string;
+        content: string;
+    }
+};
+
 jest.mock('../../src/queues/notificationQueue', () => ({
     notificationQueue: {
         getJobs: jest.fn().mockResolvedValue([
@@ -28,9 +36,9 @@ describe('POST /notifications', () => {
             });
 
         // check if the job was added to the queue
-        const queue = await notificationQueue.getJobs(['waiting', 'active', 'delayed']);
+        const queue: MockNotification[] = await notificationQueue.getJobs(['waiting', 'active', 'delayed']);
         expect(queue).toHaveLength(1);
-        expect(queue.some(q => q.data.recipientId === 'user123')).toBe(true);
+        expect(queue.some((q: MockNotification) => q.data.recipientId === 'user123')).toBe(true);
 
         // check HTTP response
         expect(response.status).toBe(202);

@@ -29,6 +29,6 @@ describe('logNotification', () => {
         const notificationType = '';
         const content = '';
 
-        expect(() => logNotification(recipientId, notificationType, content)).toThrow('Invalid parameters: recipientId, notificationTtype, and content are required.');
+        expect(() => logNotification(recipientId, notificationType, content)).toThrow('Invalid parameters: recipientId, notificationType, and content are required.');
     });
 });

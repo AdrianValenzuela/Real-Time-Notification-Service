@@ -3,9 +3,9 @@ import { logNotificationHandler } from '../routes/notifications';
 import { connection } from '../utils/redisConnection';
 
 const notificationWorker = new Worker('notifications', async (job) => {
-    const { recipientId, notificationTtype, content } = job.data;
+    const { recipientId, notificationType, content } = job.data;
     // Log the notification to a file
-    logNotificationHandler(recipientId, notificationTtype, content);
+    logNotificationHandler(recipientId, notificationType, content);
 }, { connection });
 
 

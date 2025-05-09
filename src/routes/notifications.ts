@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import { z } from 'zod';
 import { logNotification } from '../utils/logNotifications';
 import { notificationQueue } from '../queues/notificationQueue';
@@ -19,7 +19,7 @@ export const logNotificationHandler = async (recipientId: string, notificationTy
 
 
 // POST /notifications
-notificationsRouter.post('/', async (req, res) => {
+notificationsRouter.post('/', async (req: Request, res: Response) => {
     // Validate the request body with the schema
     const valid = NotificationSchema.safeParse(req.body);
     if (!valid.success) {

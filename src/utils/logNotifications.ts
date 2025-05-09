@@ -4,7 +4,7 @@ import path from 'path';
 // Function to log notifications to a file
 // appendFileSync check if the file exists, if not it creates it
 export function logNotification(recipientId: string, notificationType: string, content: string) {
-    if (recipientId === "" || notificationType === "" || content === "") {
+    if (recipientId.trim() === "" || notificationType.trim() === "" || content.trim() === "") {
         throw new Error('Invalid parameters: recipientId, notificationType and content are required.');
     }
 

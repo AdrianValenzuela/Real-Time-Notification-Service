@@ -12,9 +12,9 @@ const NotificationSchema = z.object({
     "content": z.string(),
 });
 
-export const logNotificationHandler = async (recipientId: string, notificationType: string, conent: string) => {
+export const logNotificationHandler = async (recipientId: string, notificationType: string, content: string) => {
     // Log the notification to a file
-    logNotification(recipientId, notificationType, conent);
+    logNotification(recipientId, notificationType, content);
 }
 
 
@@ -32,7 +32,7 @@ notificationsRouter.post('/', async (req: Request, res: Response) => {
             notificationType,
             content
         });
-        res.status(202).json({ message: 'Accepted' })
+        res.status(202).json({ message: 'Accepted' });
     }
 });
 
